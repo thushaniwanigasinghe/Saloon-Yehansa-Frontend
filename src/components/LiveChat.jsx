@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { X, Send } from 'lucide-react';
 
-const socket = io('http://localhost:5000');
+const socket = io(`${import.meta.env.VITE_FRONTEND_URL}`);
 
 const LiveChat = () => {
   const [isOpen, setIsOpen] = useState(false);
