@@ -18,7 +18,7 @@ const Login = () => {
     
     try {
       const config = { headers: { 'Content-Type': 'application/json' } };
-      const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password }, config);
+      const { data } = await axios.post(`${import.meta.env.VITE_FRONTEND_URL}/api/auth/login`, { email, password }, config);
       
       localStorage.setItem('userInfo', JSON.stringify(data));
       
@@ -49,7 +49,10 @@ const Login = () => {
             <label className="block text-xs font-medium text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-2">Email address</label>
             <div className="mt-1">
               <input
+                id="email"
+                name="email"
                 type="email"
+                autoComplete="email"
                 required
                 className="appearance-none block w-full px-4 py-3 bg-white dark:bg-white/5 shadow-sm dark:shadow-none border border-stone-200 dark:border-white/10 rounded-xl text-stone-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all sm:text-sm"
                 placeholder="Enter your email"
@@ -66,7 +69,10 @@ const Login = () => {
             </div>
             <div className="mt-1 relative">
               <input
+                id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
                 required
                 className="appearance-none block w-full px-4 py-3 bg-white dark:bg-white/5 shadow-sm dark:shadow-none border border-stone-200 dark:border-white/10 rounded-xl text-stone-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all sm:text-sm pr-12"
                 placeholder="Enter your password"

@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   
   // Service Form State
   const [showServiceForm, setShowServiceForm] = useState(false);
-  const [serviceForm, setServiceForm] = useState({ id: null, name: '', description: '', price: '', duration: '', category: '' });
+  const [serviceForm, setServiceForm] = useState({ id: null, name: '', description: '', price: '', duration: '', category: '', availability: { daysOff: [0], startTime: '09:00', endTime: '20:00', isCustom: false } });
 
   // Media Management State
   const [selectedMediaService, setSelectedMediaService] = useState(null);
@@ -37,9 +37,9 @@ const AdminDashboard = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       const [appRes, servRes, userRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/appointments', config),
-        axios.get('http://localhost:5000/api/services'),
-        axios.get('http://localhost:5000/api/users', config)
+        axios.get(`${import.meta.env.VITE_FRONTEND_URL}/api/appointments`, config),
+        axios.get(`${import.meta.env.VITE_FRONTEND_URL}/api/services`),
+        axios.get(`${import.meta.env.VITE_FRONTEND_URL}/api/users`, config)
       ]);
       setAppointments(appRes.data);
       setServices(servRes.data);
@@ -55,7 +55,7 @@ const AdminDashboard = () => {
   const updateAppointmentStatus = async (id, status) => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      await axios.put(`http://localhost:5000/api/appointments/${id}`, { status }, config);
+      await axios.put(`${import.meta.env.VITE_FRONTEND_URL}/api/appointments/${id}`, { status }, config);
       setAppointments(appointments.map(app => app._id === id ? { ...app, status } : app));
     } catch (error) {
       console.error('Error updating appointment', error);
@@ -68,14 +68,14 @@ const AdminDashboard = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       if (serviceForm.id) {
-        const { data } = await axios.put(`http://localhost:5000/api/services/${serviceForm.id}`, serviceForm, config);
+        const { data } = await axios.put(`${import.meta.env.VITE_FRONTEND_URL}/api/services/${serviceForm.id}`, serviceForm, config);
         setServices(services.map(s => s._id === data._id ? data : s));
       } else {
-        const { data } = await axios.post('http://localhost:5000/api/services', serviceForm, config);
+        const { data } = await axios.post(`${import.meta.env.VITE_FRONTEND_URL}/api/services`, serviceForm, config);
         setServices([...services, data]);
       }
       setShowServiceForm(false);
-      setServiceForm({ id: null, name: '', description: '', price: '', duration: '', category: '' });
+      setServiceForm({ id: null, name: '', description: '', price: '', duration: '', category: '', availability: { daysOff: [0], startTime: '09:00', endTime: '20:00', isCustom: false } });
     } catch (error) {
       console.error('Error saving service', error);
     }
@@ -85,7 +85,7 @@ const AdminDashboard = () => {
     if (window.confirm('Delete this service entirely?')) {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        await axios.delete(`http://localhost:5000/api/services/${id}`, config);
+        await axios.delete(`${import.meta.env.VITE_FRONTEND_URL}/api/services/${id}`, config);
         setServices(services.filter(s => s._id !== id));
       } catch (error) {
         console.error('Error deleting service', error);
@@ -101,6 +101,7 @@ const AdminDashboard = () => {
       price: service.price,
       duration: service.duration,
       category: service.category,
+      availability: service.availability || { daysOff: [0], startTime: '09:00', endTime: '20:00', isCustom: false }
     });
     setShowServiceForm(true);
   };
@@ -112,7 +113,7 @@ const AdminDashboard = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       const updatedPhotos = mediaUrls.split('\n').map(url => url.trim()).filter(url => url !== '');
-      const { data } = await axios.put(`http://localhost:5000/api/services/${selectedMediaService._id}`, { workPhotos: updatedPhotos }, config);
+      const { data } = await axios.put(`${import.meta.env.VITE_FRONTEND_URL}/api/services/${selectedMediaService._id}`, { workPhotos: updatedPhotos }, config);
       setServices(services.map(s => s._id === data._id ? data : s));
       setSelectedMediaService(data);
     } catch (error) {
@@ -130,7 +131,7 @@ const AdminDashboard = () => {
     if (window.confirm('Delete this review?')) {
       try {
         const config = { headers: { Authorization: `Bearer ${user.token}` } };
-        await axios.delete(`http://localhost:5000/api/services/${serviceId}/reviews/${reviewId}`, config);
+        await axios.delete(`${import.meta.env.VITE_FRONTEND_URL}/api/services/${serviceId}/reviews/${reviewId}`, config);
         fetchData(); // Refresh all
       } catch (error) {
         console.error('Error deleting review', error);
@@ -250,7 +251,7 @@ const AdminDashboard = () => {
           {activeMenu === 'services' && (
             <div>
               <div className="mb-6 flex justify-end">
-                <button onClick={() => { setServiceForm({ id: null, name: '', description: '', price: '', duration: '', category: '' }); setShowServiceForm(true); }} className="bg-yellow-500 text-black px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-neutral-800 dark:hover:bg-yellow-400 transition-colors flex items-center gap-2 shadow-lg shadow-yellow-500/20">
+                <button onClick={() => { setServiceForm({ id: null, name: '', description: '', price: '', duration: '', category: '', availability: { daysOff: [0], startTime: '09:00', endTime: '20:00', isCustom: false } }); setShowServiceForm(true); }} className="bg-yellow-500 text-black px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-neutral-800 dark:hover:bg-yellow-400 transition-colors flex items-center gap-2 shadow-lg shadow-yellow-500/20">
                   <Plus size={16}/> Add New Service
                 </button>
               </div>
@@ -266,7 +267,32 @@ const AdminDashboard = () => {
                     <input type="text" placeholder="Category" required value={serviceForm.category} onChange={e => setServiceForm({...serviceForm, category: e.target.value})} className="bg-stone-50 dark:bg-neutral-950 border border-stone-200 dark:border-white/10 rounded-xl px-4 py-3 text-stone-900 dark:text-white focus:outline-none focus:border-yellow-500" />
                     <input type="number" placeholder="Duration (mins)" required value={serviceForm.duration} onChange={e => setServiceForm({...serviceForm, duration: e.target.value})} className="bg-stone-50 dark:bg-neutral-950 border border-stone-200 dark:border-white/10 rounded-xl px-4 py-3 text-stone-900 dark:text-white focus:outline-none focus:border-yellow-500" />
                     <textarea placeholder="Detailed Description" rows="3" required className="md:col-span-2 bg-stone-50 dark:bg-neutral-950 border border-stone-200 dark:border-white/10 rounded-xl px-4 py-3 text-stone-900 dark:text-white focus:outline-none focus:border-yellow-500 resize-none" value={serviceForm.description} onChange={e => setServiceForm({...serviceForm, description: e.target.value})}></textarea>
-                    <div className="md:col-span-2 flex justify-end mt-2">
+                    
+                    <div className="md:col-span-2 mt-2 p-4 border border-stone-200 dark:border-white/10 rounded-xl bg-stone-50/50 dark:bg-neutral-950/50">
+                      <h4 className="text-sm font-medium text-stone-900 dark:text-white mb-4 uppercase tracking-widest">Availability Rules</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-1.5">Start Time</label>
+                          <input type="time" value={serviceForm.availability?.startTime || '09:00'} onChange={e => setServiceForm({...serviceForm, availability: {...(serviceForm.availability || {}), startTime: e.target.value}})} className="w-full bg-white dark:bg-neutral-900 border border-stone-200 dark:border-white/10 rounded-xl px-4 py-2 text-stone-900 dark:text-white focus:outline-none focus:border-yellow-500 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-1.5">End Time</label>
+                          <input type="time" value={serviceForm.availability?.endTime || '20:00'} onChange={e => setServiceForm({...serviceForm, availability: {...(serviceForm.availability || {}), endTime: e.target.value}})} className="w-full bg-white dark:bg-neutral-900 border border-stone-200 dark:border-white/10 rounded-xl px-4 py-2 text-stone-900 dark:text-white focus:outline-none focus:border-yellow-500 text-sm" />
+                        </div>
+                        <div className="md:col-span-2 mt-2">
+                          <label className="flex items-center gap-3 text-sm text-stone-900 dark:text-white cursor-pointer select-none">
+                            <input type="checkbox" checked={serviceForm.availability?.daysOff?.includes(0) ?? true} onChange={(e) => {
+                              const currentDaysOff = serviceForm.availability?.daysOff || [];
+                              const newDaysOff = e.target.checked ? [...currentDaysOff, 0] : currentDaysOff.filter(d => d !== 0);
+                              setServiceForm({...serviceForm, availability: {...(serviceForm.availability || {}), daysOff: newDaysOff}});
+                            }} className="accent-yellow-500 w-4 h-4" />
+                            <span>Unavailable on Sundays</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="md:col-span-2 flex justify-end mt-4">
                       <button type="submit" className="bg-yellow-500 text-black px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-neutral-800 dark:hover:bg-yellow-400 transition-colors">Save Service Settings</button>
                     </div>
                   </form>

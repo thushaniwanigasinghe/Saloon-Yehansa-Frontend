@@ -20,7 +20,7 @@ const Register = () => {
     
     try {
       const config = { headers: { 'Content-Type': 'application/json' } };
-      const { data } = await axios.post('http://localhost:5000/api/auth/register', { name, email, password, phone }, config);
+      const { data } = await axios.post(`${import.meta.env.VITE_FRONTEND_URL}/api/auth/register`, { name, email, password, phone }, config);
       
       localStorage.setItem('userInfo', JSON.stringify(data));
       navigate('/dashboard');
@@ -45,7 +45,10 @@ const Register = () => {
           <div>
             <label className="block text-xs font-medium text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-1">Full Name</label>
             <input
+              id="name"
+              name="name"
               type="text"
+              autoComplete="name"
               required
               className="appearance-none block w-full px-4 py-3 bg-white dark:bg-white/5 shadow-sm dark:shadow-none border border-stone-200 dark:border-white/10 rounded-xl text-stone-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all sm:text-sm"
               placeholder="Your Full Name"
@@ -57,7 +60,10 @@ const Register = () => {
           <div>
             <label className="block text-xs font-medium text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-1">Email address</label>
             <input
+              id="email"
+              name="email"
               type="email"
+              autoComplete="email"
               required
               className="appearance-none block w-full px-4 py-3 bg-white dark:bg-white/5 shadow-sm dark:shadow-none border border-stone-200 dark:border-white/10 rounded-xl text-stone-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all sm:text-sm"
               placeholder="Enter your email"
@@ -69,7 +75,10 @@ const Register = () => {
           <div>
             <label className="block text-xs font-medium text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-1">Phone Number</label>
             <input
-              type="text"
+              id="phone"
+              name="phone"
+              type="tel"
+              autoComplete="tel"
               required
               className="appearance-none block w-full px-4 py-3 bg-white dark:bg-white/5 shadow-sm dark:shadow-none border border-stone-200 dark:border-white/10 rounded-xl text-stone-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all sm:text-sm"
               placeholder="Your phone number"
@@ -82,7 +91,10 @@ const Register = () => {
             <label className="block text-xs font-medium text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-1">Password</label>
             <div className="relative">
               <input
+                id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
                 required
                 className="appearance-none block w-full px-4 py-3 bg-white dark:bg-white/5 shadow-sm dark:shadow-none border border-stone-200 dark:border-white/10 rounded-xl text-stone-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all sm:text-sm pr-12"
                 placeholder="Create a password"

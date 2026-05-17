@@ -11,6 +11,7 @@ const Services = () => {
   // Booking State
   const [selectedService, setSelectedService] = useState(null);
   const [bookingDate, setBookingDate] = useState('');
+  const [bookingEndDate, setBookingEndDate] = useState('');
   const [bookingTime, setBookingTime] = useState('');
   const [notes, setNotes] = useState('');
   const [bookingError, setBookingError] = useState('');
@@ -36,7 +37,7 @@ const Services = () => {
 
   async function fetchServices() {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/services');
+      const { data } = await axios.get(`${import.meta.env.VITE_FRONTEND_URL}/api/services`);
       setServices(data);
     } catch (error) {
       console.error('Error fetching services', error);
@@ -61,13 +62,11 @@ const Services = () => {
     e.preventDefault();
     
     try {
-      const config = {
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` }
-      };
-      
-      await axios.post('http://localhost:5000/api/appointments', {
+      const config = { headers: { Authorization: `Bearer ${user.token}` } };
+      await axios.post(`${import.meta.env.VITE_FRONTEND_URL}/api/appointments`, {
         serviceId: selectedService._id,
         date: bookingDate,
+        endDate: bookingEndDate,
         time: bookingTime,
         notes
       }, config);
@@ -91,12 +90,12 @@ const Services = () => {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` }
       };
       
-      await axios.post(`http://localhost:5000/api/services/${viewingService._id}/reviews`, {
+      await axios.post(`${import.meta.env.VITE_FRONTEND_URL}/api/services/${viewingService._id}/reviews`, {
         rating,
         comment
       }, config);
       
-      const { data } = await axios.get(`http://localhost:5000/api/services/${viewingService._id}`);
+      const { data } = await axios.get(`${import.meta.env.VITE_FRONTEND_URL}/api/services/${viewingService._id}`);
       setViewingService(data);
       fetchServices(); // Refresh main list
       
@@ -175,11 +174,11 @@ const Services = () => {
                     <div 
                       key={service._id} 
                       onClick={() => { setViewingService(service); setActiveTab('details'); }}
-                      className="group flex flex-col h-full justify-between p-8 rounded-2xl bg-white dark:bg-white/[0.02] shadow-sm dark:shadow-none border border-stone-200 dark:border-white/5 hover:bg-stone-50 dark:hover:bg-white/[0.04] hover:border-black dark:hover:border-black/30 dark:hover:border-yellow-500/30 hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-[0_0_25px_rgba(234,179,8,0.1)] hover:-translate-y-1 cursor-pointer transition-all duration-500"
+                      className="group flex flex-col h-full justify-between p-8 rounded-2xl bg-white dark:bg-white/[0.02] shadow-sm dark:shadow-none border border-stone-200 dark:border-white/5 hover:bg-stone-50 dark:hover:bg-white/[0.04] hover:border-yellow-500 dark:hover:border-yellow-500 hover:shadow-[0_10px_30px_rgba(234,179,8,0.15)] dark:hover:shadow-[0_0_25px_rgba(234,179,8,0.25)] hover:-translate-y-2 cursor-pointer transition-all duration-500"
                     >
                       <div className="mb-6 flex-grow">
                         <div className="flex flex-col mb-4">
-                          <h3 className="text-xl font-light text-stone-900 dark:text-white tracking-wide group-hover:text-black dark:hover:text-yellow-500 transition-colors mb-2">{service.name}</h3>
+                          <h3 className="text-xl font-light text-stone-900 dark:text-white tracking-wide group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors mb-2">{service.name}</h3>
                           <div className="flex items-center gap-0.5 text-yellow-500 mb-4">
                             {[...Array(5)].map((_, i) => (
                               <Star key={i} size={14} fill={i < Math.round(service.rating || 0) ? "currentColor" : "none"} className={i < Math.round(service.rating || 0) ? "" : "text-gray-600"} />
@@ -393,21 +392,105 @@ const Services = () => {
                       className="w-full bg-black/20 border border-stone-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-stone-900 dark:text-white focus:outline-none focus:border-yellow-500 text-sm transition-colors"
                       style={{ colorScheme: 'dark' }}
                       value={bookingDate}
-                      onChange={(e) => setBookingDate(e.target.value)}
+                      onChange={(e) => {
+                        const dateStr = e.target.value;
+                        if (!dateStr) {
+                          setBookingDate('');
+                          return;
+                        }
+                        const [year, month, day] = dateStr.split('-');
+                        const selectedDate = new Date(year, month - 1, day);
+                        const isCustom = selectedService.availability?.isCustom;
+                        const daysOff = isCustom ? (selectedService.availability?.daysOff || []) : [0];
+                        if (daysOff.includes(selectedDate.getDay()) && selectedDate.getDay() === 0) {
+                          setBookingError('Sunday bookings are currently closed. Please choose another day (for example, come on Monday instead).');
+                          setBookingDate('');
+                        } else if (daysOff.includes(selectedDate.getDay())) {
+                          setBookingError('This service is not available on the selected day.');
+                          setBookingDate('');
+                        } else {
+                          setBookingError('');
+                          setBookingDate(dateStr);
+                        }
+                      }}
                     />
                   </div>
-                  <div>
-                    <label className="block text-[10px] font-bold text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-1.5">Time</label>
-                    <input
-                      type="time"
-                      required
-                      className="w-full bg-black/20 border border-stone-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-stone-900 dark:text-white focus:outline-none focus:border-yellow-500 text-sm transition-colors"
-                      style={{ colorScheme: 'dark' }}
-                      value={bookingTime}
-                      onChange={(e) => setBookingTime(e.target.value)}
-                    />
-                  </div>
+                  
+                  {selectedService && (selectedService.category === 'Rentals' || selectedService.name.toLowerCase().includes('rental')) ? (
+                    <div>
+                      <label className="block text-[10px] font-bold text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-1.5">Return Date</label>
+                      <input
+                        type="date"
+                        required
+                        min={bookingDate || new Date().toISOString().split('T')[0]}
+                        className="w-full bg-black/20 border border-stone-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-stone-900 dark:text-white focus:outline-none focus:border-yellow-500 text-sm transition-colors"
+                        style={{ colorScheme: 'dark' }}
+                        value={bookingEndDate}
+                        onChange={(e) => {
+                          const dateStr = e.target.value;
+                          if (!dateStr) {
+                            setBookingEndDate('');
+                            return;
+                          }
+                          const [year, month, day] = dateStr.split('-');
+                          const selectedDate = new Date(year, month - 1, day);
+                          const isCustom = selectedService.availability?.isCustom;
+                          const daysOff = isCustom ? (selectedService.availability?.daysOff || []) : [0];
+                          if (daysOff.includes(selectedDate.getDay()) && selectedDate.getDay() === 0) {
+                            setBookingError('Sunday returns are currently closed. Please choose another return date.');
+                            setBookingEndDate('');
+                          } else {
+                            setBookingError('');
+                            setBookingEndDate(dateStr);
+                          }
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block text-[10px] font-bold text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-1.5">Time</label>
+                      <input
+                        type="time"
+                        required
+                        className="w-full bg-black/20 border border-stone-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-stone-900 dark:text-white focus:outline-none focus:border-yellow-500 text-sm transition-colors"
+                        style={{ colorScheme: 'dark' }}
+                        value={bookingTime}
+                        onChange={(e) => {
+                          setBookingError('');
+                          setBookingTime(e.target.value);
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
+
+                {/* Rental Pricing Logic */}
+                {(() => {
+                  const isRental = selectedService && (selectedService.category === 'Rentals' || selectedService.name.toLowerCase().includes('rental'));
+                  if (isRental && bookingDate && bookingEndDate) {
+                    const start = new Date(bookingDate.split('-')[0], bookingDate.split('-')[1] - 1, bookingDate.split('-')[2]);
+                    const end = new Date(bookingEndDate.split('-')[0], bookingEndDate.split('-')[1] - 1, bookingEndDate.split('-')[2]);
+                    const diffTime = end - start;
+                    const rentalDuration = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // 15th to 15th = 1 day
+                    
+                    const ALLOWED_RENTAL_DAYS = 2;
+
+                    return (
+                      <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-xl mt-4">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-xs text-stone-600 dark:text-gray-400 uppercase tracking-widest font-bold">Rental Duration</span>
+                          <span className="text-sm font-bold text-stone-900 dark:text-white">{rentalDuration} Days</span>
+                        </div>
+                        {rentalDuration > ALLOWED_RENTAL_DAYS && (
+                          <div className="mt-2 pt-2 border-t border-yellow-500/20">
+                            <p className="text-xs font-bold text-red-500">Warning: Your rental exceeds the standard {ALLOWED_RENTAL_DAYS}-day limit. Extra charges will be applied.</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
                 
                 <div>
                   <label className="block text-[10px] font-bold text-stone-600 dark:text-gray-400 uppercase tracking-widest mb-1.5">Special Requests</label>
