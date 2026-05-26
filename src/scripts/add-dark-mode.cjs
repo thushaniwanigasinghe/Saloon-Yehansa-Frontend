@@ -26,7 +26,7 @@ function replaceClassesProperly(content) {
   
   for (const [oldClass, newClasses] of Object.entries(colorMap)) {
     const escapedClass = oldClass.replace(/\//g, '\\/');
-    // Regex matches the whole token (word characters, dashes, colons, slashes) ending with oldClass
+    
     const regex = new RegExp(`\\b([a-z0-9-:]*?)${escapedClass}(?![\\w/-])`, 'g');
     
     newContent = newContent.replace(regex, (match, prefix) => {
