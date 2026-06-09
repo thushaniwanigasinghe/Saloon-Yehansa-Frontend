@@ -11,7 +11,7 @@ const Footer = () => {
           {/* Column 1: Logo & Socials */}
           <div className="flex flex-col items-start gap-8">
             <Link to="/" className="flex flex-col items-center group inline-flex">
-              <span className="text-5xl font-sans font-normal uppercase tracking-widest text-stone-600 dark:text-gray-300 group-hover:text-black dark:hover:text-yellow-500 transition-colors leading-none mb-1">Saloon</span>
+              <span className="text-5xl font-sans font-normal uppercase tracking-widest text-stone-600 dark:text-gray-300 group-hover:text-black dark:hover:text-yellow-500 transition-colors leading-none mb-1">Salon</span>
               <span className="text-[12px] font-normal tracking-[0.4em] uppercase text-stone-600 dark:text-gray-400 group-hover:text-black dark:hover:text-yellow-500 transition-colors border-y border-stone-300 dark:border-white/20 py-1 w-full text-center">Yehansa</span>
               <span className="text-[9px] font-normal tracking-[0.2em] uppercase text-yellow-500 mt-1 w-full text-center">Hair & Beauty Unisex</span>
             </Link>
@@ -83,7 +83,7 @@ const Footer = () => {
         {/* Bottom Copyright */}
         <div className="pt-6 border-t border-stone-200 dark:border-white/10 text-center">
           <p className="text-xs text-gray-500 font-light tracking-wide">
-            &copy; {new Date().getFullYear()} All Rights Reserved @ Saloon Yehansa 
+            &copy; {new Date().getFullYear()} All Rights Reserved @ Salon Yehansa 
           </p>
         </div>
       </div>
