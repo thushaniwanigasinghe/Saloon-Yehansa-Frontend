@@ -48,7 +48,7 @@ const About = () => {
         </div>
         
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-20">
-          <h4 className="text-yellow-500 text-xs font-bold tracking-[0.4em] uppercase mb-6">The Saloon Yehansa Experience</h4>
+          <h4 className="text-yellow-500 text-xs font-bold tracking-[0.4em] uppercase mb-6">The Salon Yehansa Experience</h4>
          <h1 className="text-4xl md:text-5xl font-light text-white dark:text-white mb-6 tracking-widest uppercase">
   Our <span className="font-serif italic text-white/70 lowercase">Heritage</span>
 </h1>
@@ -78,10 +78,10 @@ const About = () => {
             </h2>
             <div className="space-y-6 text-stone-600 dark:text-gray-400 font-light leading-relaxed text-base">
               <p>
-                Founded with a singular vision to elevate the standard of beauty, Saloon Yehansa emerged as a sanctuary for those who seek more than just a haircut. We believe that true elegance lies in the details.
+                Founded with a singular vision to elevate the standard of beauty, Salon Yehansa emerged as a sanctuary for those who seek more than just a haircut. We believe that true elegance lies in the details.
               </p>
               <p>
-                Our flagship studio was designed to be a haven of tranquility, where modern aesthetics meet timeless luxury. Every element of the Saloon Yehansa experience has been meticulously crafted to provide you with an atmosphere of absolute serenity and indulgence.
+                Our flagship studio was designed to be a haven of tranquility, where modern aesthetics meet timeless luxury. Every element of the Salon Yehansa experience has been meticulously crafted to provide you with an atmosphere of absolute serenity and indulgence.
               </p>
             </div>
             
@@ -92,7 +92,7 @@ const About = () => {
             </div>
             
             <div className="pt-8 border-t border-stone-200 dark:border-white/10 flex flex-col sm:flex-row items-center gap-6">
-              <img src={logoImage} alt="Saloon Yehansa Logo" className="h-20 w-20 object-cover rounded-full border-2 border-yellow-500/30 shadow-[0_0_20px_rgba(234,179,8,0.2)]" />
+              <img src={logoImage} alt="Salon Yehansa Logo" className="h-20 w-20 object-cover rounded-full border-2 border-yellow-500/30 shadow-[0_0_20px_rgba(234,179,8,0.2)]" />
               <div className="text-center sm:text-left">
                 <p className="text-xs text-stone-600 dark:text-gray-400 uppercase tracking-widest">Founder & Creative Director</p>
                 <p className="text-base text-stone-900 dark:text-white font-medium mt-1 tracking-wide">S.A.Nethuki Yehansha</p>

@@ -137,7 +137,7 @@ const Navbar = () => {
                 <div className="absolute inset-0 bg-yellow-500/20 blur-md rounded-xl scale-110 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
               <span className="text-base font-light tracking-widest text-stone-900 dark:text-white uppercase transition-colors group-hover:text-yellow-600 dark:group-hover:text-yellow-400">
-                Saloon<span className="font-bold">Yehansa</span>
+                Salon<span className="font-bold">Yehansa</span>
               </span>
             </Link>
           </div>

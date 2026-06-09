@@ -73,7 +73,7 @@ const Terms = () => {
                     <h2 className="text-3xl font-serif italic text-stone-900 dark:text-white">1. Introduction</h2>
                   </div>
                   <p className="text-stone-600 dark:text-gray-400">
-                    Welcome to Saloon Yehansa. These terms and conditions outline the rules and regulations for the use of Saloon Yehansa's Website and our professional services. By accessing this website and booking our services, we assume you accept these terms and conditions in full. Do not continue to use Saloon Yehansa's website if you do not accept all of the terms and conditions stated on this page.
+                    Welcome to Salon Yehansa. These terms and conditions outline the rules and regulations for the use of Salon Yehansa's Website and our professional services. By accessing this website and booking our services, we assume you accept these terms and conditions in full. Do not continue to use Salon Yehansa's website if you do not accept all of the terms and conditions stated on this page.
                   </p>
                 </section>
 
@@ -88,7 +88,7 @@ const Terms = () => {
                     <h2 className="text-3xl font-serif italic text-stone-900 dark:text-white">2. Appointments & Booking</h2>
                   </div>
                   <p className="text-stone-600 dark:text-gray-400 mb-6">
-                    All appointments must be booked in advance through our online platform or by contacting our front desk. When booking an appointment, you agree to provide accurate and complete information. Saloon Yehansa reserves the right to cancel or modify reservations where it appears that a customer has engaged in fraudulent or inappropriate activity.
+                    All appointments must be booked in advance through our online platform or by contacting our front desk. When booking an appointment, you agree to provide accurate and complete information. Salon Yehansa reserves the right to cancel or modify reservations where it appears that a customer has engaged in fraudulent or inappropriate activity.
                   </p>
                   <div className="bg-white/60 dark:bg-black/40 shadow-sm dark:shadow-none border border-stone-200 dark:border-white/5 rounded-xl p-6">
                     <ul className="space-y-4 text-stone-600 dark:text-gray-400">
@@ -135,7 +135,7 @@ const Terms = () => {
                     <h2 className="text-3xl font-serif italic text-stone-900 dark:text-white">4. Refunds & Satisfaction</h2>
                   </div>
                   <p className="text-stone-600 dark:text-gray-400">
-                    Saloon Yehansa strives to provide the highest level of service and artistry. If you are dissatisfied with your service, please notify our management within 48 hours of your appointment. While we do not offer cash refunds for services rendered, we will gladly offer a complimentary adjustment to ensure your absolute satisfaction. Retail products may be returned within 14 days of purchase, provided they are unopened and in their original pristine packaging.
+                    Salon Yehansa strives to provide the highest level of service and artistry. If you are dissatisfied with your service, please notify our management within 48 hours of your appointment. While we do not offer cash refunds for services rendered, we will gladly offer a complimentary adjustment to ensure your absolute satisfaction. Retail products may be returned within 14 days of purchase, provided they are unopened and in their original pristine packaging.
                   </p>
                 </section>
 
@@ -150,7 +150,7 @@ const Terms = () => {
                     <h2 className="text-3xl font-serif italic text-stone-900 dark:text-white">5. Health & Safety</h2>
                   </div>
                   <p className="text-stone-600 dark:text-gray-400">
-                    The health and safety of our clients and staff is our paramount priority. Please inform your stylist or therapist of any allergies, medical conditions, or sensitivities prior to your service commencing. Saloon Yehansa is not liable for any adverse reactions caused by undisclosed medical conditions. We maintain strict sanitization protocols between every client for your peace of mind.
+                    The health and safety of our clients and staff is our paramount priority. Please inform your stylist or therapist of any allergies, medical conditions, or sensitivities prior to your service commencing. Salon Yehansa is not liable for any adverse reactions caused by undisclosed medical conditions. We maintain strict sanitization protocols between every client for your peace of mind.
                   </p>
                 </section>
 
